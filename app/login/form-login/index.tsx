@@ -1,12 +1,33 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
+
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
+const LoginSchema = z.object({
+    email: z.string().email("E-mail inválido"),
+    password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres")
+});
+
+type LoginSchemaDataType = z.infer<typeof LoginSchema>;
+
 export default function FormLogin() {
+
+    const { handleSubmit, register, formState: { errors } } = useForm<LoginSchemaDataType>({
+        resolver: zodResolver(LoginSchema)
+    });
+
+    const onSubmit = (data: LoginSchemaDataType) => {
+        console.log(data);
+    };
+
     return (
-        <form className="bg-black">
+        <form className="bg-black" onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-2 text-center">
                 <h1 className="text-3xl text-white font-bold">Login</h1>
                 <p className="text-white text-xs pt-2" >Ao continuar, você concorda com nosso <a className="text-blue">Acordo de Usuário</a> e reconhece que compreende a <a>Política de Privacidade</a></p>
@@ -22,7 +43,9 @@ export default function FormLogin() {
                         className="bg-zinc-800/90 rounded-full mt-2 placeholder:text-zinc-600/90 focus-visible:text-white focus-visible:border-emerald-400/90"
                         type="email"
                         placeholder="Digite seu e-mail"
+                        {...register("email")}
                     />
+                    {errors.email && <span className="text-red-500">{errors.email.message}</span>}
                 </div>
                 <div className="mt-2">
                     <Label className="text-white">Senha</Label>
@@ -30,7 +53,9 @@ export default function FormLogin() {
                         className="bg-zinc-800/90 rounded-full mt-2 placeholder:text-zinc-600/90 focus-visible:text-white focus-visible:border-emerald-400/90"
                         type="password"
                         placeholder="Digite sua senha"
+                        {...register("password")}                        
                     />
+                    {errors.password && <span className="text-red-500">{errors.password.message}</span>}
                 </div>
                 <Button className=" w-full rounded-full font-bold bg-emerald-400/90 mt-6 hover:bg-emerald-400/70 transition-all">Login</Button>
             </div>
