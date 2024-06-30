@@ -1,5 +1,6 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+"use client"
+
+import { useState } from "react";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -20,16 +21,32 @@ type RegisterSchemaDataType = z.infer<typeof RegisterSchema>
 
 export default function FormRegister() {
 
-    const { handleSubmit, register, formState: { errors } } = useForm<RegisterSchemaDataType>({
-        resolver: zodResolver(RegisterSchema)
-    });
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errors, setErrors] = useState<Partial<RegisterSchemaDataType>>({}); // o Partial torna as propriedades do não obrigatórias, o erro pode existir ou não
 
-    const onSubmit = (data: RegisterSchemaDataType) => {
-        console.log(data);
-    };
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+
+        const formData: RegisterSchemaDataType = { name, email, password };
+        const result = RegisterSchema.safeParse(formData); // o safeParse é uma função que valida o objeto com base no schema
+
+        if (!result.success) {
+            const validationErrors: Partial<RegisterSchemaDataType> = {};
+            result.error.errors.forEach((error) => {
+                const field = error.path[0] as keyof RegisterSchemaDataType;
+                validationErrors[field] = error.message;
+            });
+            setErrors(validationErrors);
+        } else {
+            console.log(result.data);
+            // process form data
+        }
+    }
 
     return (
-        <form className="bg-black" onSubmit={handleSubmit(onSubmit)}>
+        <form className="bg-black" onSubmit={handleSubmit}>
             <div className="mb-2 text-center">
                 <h1 className="text-3xl text-white font-bold">Registro</h1>
                 <p className="text-white text-xs pt-2" >Ao continuar, você concorda com nosso <a href="#">Acordo de Usuário</a> e reconhece que compreende a <a>Política de Privacidade</a></p>
@@ -45,9 +62,10 @@ export default function FormRegister() {
                         className="bg-zinc-800/90 rounded-full mt-2 placeholder:text-zinc-600/90 focus-visible:text-white focus-visible:border-emerald-400/90"
                         type="text"
                         placeholder="Digite seu nome completo"
-                        {...register("name")}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
-                    {errors.name && <span className="text-red-500">{errors.name.message}</span>}
+                    {errors.name && <span className="text-red-500">{errors.name}</span>}
                 </div>
                 <div className="mt-4">
                     <Label className="text-white">E-mail</Label>
@@ -55,9 +73,10 @@ export default function FormRegister() {
                         className="bg-zinc-800/90 rounded-full mt-2 placeholder:text-zinc-600/90 focus-visible:text-white focus-visible:border-emerald-400/90"
                         type="email"
                         placeholder="Digite seu melhor e-mail"
-                        {...register("email")}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
-                    {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+                    {errors.email && <span className="text-red-500">{errors.email}</span>}
                 </div>
                 <div className="mt-2">
                     <Label className="text-white">Senha</Label>
@@ -65,9 +84,10 @@ export default function FormRegister() {
                         className="bg-zinc-800/90 rounded-full mt-2 placeholder:text-zinc-600/90 focus-visible:text-white focus-visible:border-emerald-400/90"
                         type="password"
                         placeholder="Digite sua senha"
-                        {...register("password")}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
-                    {errors.password && <span className="text-red-500">{errors.password.message}</span>}
+                    {errors.password && <span className="text-red-500">{errors.password}</span>}
                 </div>
                 <Button
                     type="submit"
