@@ -9,6 +9,7 @@ import { Label } from "@radix-ui/react-label";
 
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import Link from "next/link";
 
 
 const RegisterSchema = z.object({
@@ -89,16 +90,20 @@ export default function FormRegister() {
                     />
                     {errors.password && <span className="text-red-500">{errors.password}</span>}
                 </div>
-                <Button
-                    type="submit"
-                    className=" w-full rounded-full font-bold bg-emerald-400/90 mt-6 hover:bg-emerald-400/70 transition-all">
-                    Cadastrar
-                </Button>
+                <Link href="/api/auth/register">
+                    <Button
+                        type="submit"
+                        className=" w-full rounded-full font-bold bg-emerald-400/90 mt-6 hover:bg-emerald-400/70 transition-all">
+                        Cadastrar
+                    </Button>
+                </Link>
             </div>
             <br />
             <div className="justify-center text-center">
                 <h1 className="text-xl text-white">Já possui conta?</h1>
-                <Button className=" w-full rounded-full font-bold border border-emerald-400/90 bg-transparent mt-4 text-white hover:opacity-80 transition-all">Realizar Login</Button>
+                <Link href="/login">
+                    <Button className=" w-full rounded-full font-bold border border-emerald-400/90 bg-transparent mt-4 text-white hover:opacity-80 transition-all">Realizar Login</Button>
+                </Link>
             </div>
         </form >
     );

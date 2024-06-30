@@ -9,6 +9,7 @@ import { Label } from "@radix-ui/react-label";
 
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import Link from "next/link";
 
 const LoginSchema = z.object({
     email: z.string().email("E-mail inválido"),
@@ -74,12 +75,22 @@ export default function FormLogin() {
                     />
                     {errors.password && <span className="text-red-500">{errors.password}</span>}
                 </div>
-                <Button className="w-full rounded-full font-bold bg-emerald-400/90 mt-6 hover:bg-emerald-400/70 transition-all">Login</Button>
+                <Link href="/api/auth/signin">
+                    <Button
+                        type="submit"
+                        className="w-full rounded-full font-bold bg-emerald-400/90 mt-6 hover:bg-emerald-400/70 transition-all">
+                        Login
+                    </Button>
+                </Link>
             </div>
             <br />
             <div className="justify-center text-center">
                 <h1 className="text-xl text-white">Não possui conta?</h1>
-                <Button className="w-full rounded-full font-bold border border-emerald-400/90 bg-transparent mt-4 text-white hover:opacity-80 transition-all">Criar Conta</Button>
+                <Link href="/register">
+                    <Button className="w-full rounded-full font-bold border border-emerald-400/90 bg-transparent mt-4 text-white hover:opacity-80 transition-all">
+                        Criar Conta
+                    </Button>
+                </Link>
             </div>
         </form>
     );
