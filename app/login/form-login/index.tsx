@@ -75,7 +75,7 @@ export default function FormLogin() {
                     />
                     {errors.password && <span className="text-red-500">{errors.password}</span>}
                 </div>
-                <Link href="/api/auth/signin">
+                <Link href="/habit">
                     <Button
                         type="submit"
                         className="w-full rounded-full font-bold bg-emerald-400/90 mt-6 hover:bg-emerald-400/70 transition-all">
